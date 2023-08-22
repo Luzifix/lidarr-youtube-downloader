@@ -11,10 +11,12 @@ docker build -t lyd .
 docker run \
    -v /path/to/music:/path/to/music \
    -v /path/to/db/file:/path/to/db/file \   
+   -v /path/to/cookies.txt:/path/to/cookies.txt \   
    -e LIDARR_URL="http://HOST_IP:8686" \
    -e LIDARR_API_KEY="771de60596e946f6b3e5e6f5fb6fd729" \
    -e LIDARR_DB="/path/to/lidarr/lidarr.db" \
    -e LIDARR_MUSIC_PATH="/music" \
+   -e COOKIE_FILE="/cookies.txt" \
    --name lyd lyd
 ```
 
