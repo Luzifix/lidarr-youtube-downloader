@@ -404,7 +404,12 @@ def get_song(
     if not isExist:
         os.makedirs(path)
 
+    cookiePath = os.environ.get("COOKIE_FILE", "")
+    
     downloader = "youtube-dl --no-progress -x"
+    if cookiePath != "":
+        downloader += ' --cookies ' + cookiePath + " "
+        
     downloader += ' --audio-format mp3 "{link}" -o '
     downloader = downloader.format(link=bestLink)
     downloader += '"{trackname}"'.format(trackname=filePath.replace('"', '\\"'))
