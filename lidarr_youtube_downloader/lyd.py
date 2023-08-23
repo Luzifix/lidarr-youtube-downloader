@@ -123,7 +123,7 @@ def ffmpeg_encode_mp3(path, artist, title, album, year, trackNumber, genre):
 def update_mp3tag(
     artistName, albumName, title, trackNumber, trackTotal, year, disc, discTotal, genre
 ):
-    path = music_path + "/" + artistName + "/" + albumName
+    path = music_path + "/" + artistName
     filePath = path + "/" + artistName + " - "
     filePath += albumName + " - " + title + ".mp3"
 
@@ -145,7 +145,7 @@ def update_mp3tag(
                 output(template="tagging", result="Failed adding tag")
                 return False
 
-        if audiofile.tag is None:
+        if audiofile.tag is not None:
             audiofile.initTag()
             audiofile.tag.clear()
 
@@ -254,7 +254,7 @@ def get_song(
     bestLink = ""
     bestTitle = ""
     searchFor = artistName + " - " + title
-    path = music_path + "/" + artistName + "/" + albumName
+    path = music_path + "/" + artistName
     filePath = path + "/" + artistName + " - " + albumName
     filePath += " - " + title + ".mp3"
     os.makedirs(path, exist_ok=True)
@@ -485,8 +485,8 @@ def iterate_missing(artist_filter, iterative):
             if iterative:
                 stop = True
             page_num = 0
-            print("Sleeping 60 seconds")
-            time.sleep(60)
+            print("Sleeping 10 seconds")
+            time.sleep(10)
 
         iterate_records(json["records"], totalRecords, record_counter, artist_filter)
         page_num += 1

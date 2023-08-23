@@ -80,22 +80,22 @@ Album: 34/545   Track: 71/226
             -x
             --audio-format mp3 "https://music.youtube.com/watch?v=W15_1kE08Gc"
             -o 
-            "/music/The Beatles/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
+            "/music/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
 
 
         Downloaded successfully
 
         [youtube] W15_1kE08Gc: Downloading webpage
         [youtube] W15_1kE08Gc: Downloading MPD manifest
-        [download] Destination: /music/The Beatles/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3
+        [download] Destination: /music/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3
         [download] Download completed
-        [ffmpeg] Correcting container in "/music/The Beatles/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
-        [ffmpeg] Post-process file /music/The Beatles/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3 exists, skipping
+        [ffmpeg] Correcting container in "/music/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
+        [ffmpeg] Post-process file /music/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3 exists, skipping
 
     Ffmpeg
     ========================================
 
-        ffmpeg -i "/music/The Beatles/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
+        ffmpeg -i "/music/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
             -metadata artist="The Beatles"
             -metadata year="1988"
             -metadata title="Norwegian Wood (This Bird Has Flown)"
@@ -104,7 +104,7 @@ Album: 34/545   Track: 71/226
             -metadata genre="Acoustic Rock"
             -hide_banner
             -loglevel error
-            "/music/The Beatles/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
+            "/music/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
 
         ffmpeg added mp3 tag      
 
