@@ -41,24 +41,6 @@ def get_view_path():
         else:
             return submodule_search_locations[1] + "/"
 
-
-def save_seen():
-    global seen
-
-    with open("seen", "w+") as fp:
-        fp.writelines("\n".join(seen))
-
-
-def load_seen():
-    global seen
-
-    try:
-        with open("seen", "r") as fp:
-            seen = fp.read().splitlines()
-    except:
-        seen = []
-
-
 def rescan(path):
     data = {"name": "RescanFolders", "folders": [path]}
     requests.post(endpoint + "/api/v1/command", json=data, headers=headers)
@@ -513,7 +495,6 @@ def iterate_tracks(tracks, album, totalRecords, record_counter, artist_filter):
         )
 
         seen.append(full_trackname)
-        save_seen()
 
         track_no += 1
 
@@ -600,8 +581,7 @@ def run(
     lidar_db = db
     music_path = path
     headers = {"X-Api-Key": api_key}
-    load_seen()
-
+    
     iterative = True if stop is not None else False
     iterate_missing(artist, iterative)
 
