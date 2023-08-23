@@ -30,11 +30,6 @@ chmod +x /usr/bin/youtube-dl
 pip3 install eyed3 ytmusicapi
 ```
 
-### Install
-```
-pip3 install lidarr-youtube-downloader
-```
-
 ### Config
 ```
 export LIDARR_URL="http://127.0.0.1:8686"
