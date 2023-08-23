@@ -168,55 +168,9 @@ def update_mp3tag(
         os.remove(filePath)
         return False
 
-
-def add_lidarr_trackfile(con, cur, album_id, filePath, artistName, albumName):
-    # insert
-    filesize = os.path.getsize(filePath)
-    taglib = '{"quality": 2, "revision": {"version": 1, '
-    taglib += '"real": 0, "isRepack": false }, '
-    taglib += '"qualityDetectionSource": "tagLib"}'
-    quality = '{"audioFormat": "MPEG Version 1 Audio, Layer 3 VBR",'
-    quality += '"audioBitrate": 154, "audioChannels": 2, "audioBits": 0,'
-    quality += '"audioSampleRate": 44100}'
-    screenname = artistName + " " + albumName
-
-    query = "INSERT INTO TrackFiles "
-    query += "(AlbumId, Quality, Size, SceneName, DateAdded, "
-    query += "ReleaseGroup, MediaInfo, Modified, Path)"
-    query += " VALUES(?, ?, ?, ?, ?, NULL, ?, ?, ?)"
-    cur.execute(
-        query,
-        (
-            album_id,
-            taglib,
-            filesize,
-            screenname,
-            datetime.now(),
-            quality,
-            datetime.now(),
-            filePath,
-        ),
-    )
-    con.commit()
-    output(template="lidarr", result="Updated the db")
-    return cur.lastrowid
-
-
-def set_lidarr_track_trackfield(con, cur, TrackFileId, track_id):
-    # update
-    cur.execute(
-        "UPDATE Tracks SET TrackFileId=? WHERE id = ?",
-        (
-            track_id,
-            TrackFileId,
-        ),
-    )
-    con.commit()
-
-
 def get_lidarr_album_id(cur, albumName, year):
     cur.execute(
-        "SELECT id FROM Albums WHERE Title LIKE ? and ReleaseDate like ?",
+        "SELECT Id FROM Albums WHERE Title LIKE ? and ReleaseDate like ?",
         (
             "%" + albumName + "%",
             year + "%",
@@ -260,43 +214,6 @@ def get_lidarr_track_ids(cur, artist, album, track):
     if len(result) == 0:
         return -1
     return [X[0] for X in result]
-
-
-def update_lidarr_db(artistName, albumName, title, trackNumber, year):
-    global lidar_db, music_path
-
-    path = music_path + "/" + artistName + "/" + albumName
-    filePath = path + "/" + artistName + " - " + albumName
-    filePath += " - " + title + ".mp3"
-
-    con = sqlite3.connect(lidar_db)
-    cur = con.cursor()
-
-    album_id = get_lidarr_album_id(cur, albumName, year)
-    trackfile_id = get_lidarr_trackfile_id(cur, filePath)
-
-    if trackfile_id == -1:
-        add_lidarr_trackfile(con, cur, album_id, filePath, artistName, albumName)
-
-    track_ids = get_lidarr_track_ids(cur, artistName, albumName, title)
-    trackfile_id = get_lidarr_trackfile_id(cur, filePath)
-
-    if track_ids == -1:
-        con.close()
-        return
-
-    for x in track_ids:
-        set_lidarr_track_trackfield(con, cur, trackfile_id, x)
-
-    con.close()
-
-    output(
-        template="lidarrdb_update",
-        result="Updated {artist} - {albumName} - {title}".format(
-            artist=artistName, albumName=albumName, title=title
-        ),
-    )
-
 
 def skip_youtube_download(link):
     try:
@@ -350,7 +267,6 @@ def get_song(
             discTotal,
             genre,
         )
-        update_lidarr_db(artistName, albumName, title, trackNumber, year)
         rescan(path)
         return
 
@@ -422,7 +338,6 @@ def get_song(
         )
 
         if tagged:
-            update_lidarr_db(artistName, albumName, title, trackNumber, year)
             rescan(path)
         else:
             append_to_skip_file(bestLink)
