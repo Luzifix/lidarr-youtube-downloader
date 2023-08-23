@@ -1,6 +1,6 @@
-# lidarr-youtube-downloader
+# lidarr-youtube-music-downloader
 
-Look for missing tracks in your lidarr library and download them from youtube.
+Look for missing tracks in your lidarr library and download them from youtube music.
 
 # Docker Usage
 
@@ -16,7 +16,7 @@ docker run \
    -e LIDARR_API_KEY="771de60596e946f6b3e5e6f5fb6fd729" \
    -e LIDARR_DB="/path/to/lidarr/lidarr.db" \
    -e LIDARR_MUSIC_PATH="/music" \
-   -e COOKIE_FILE="/cookies.txt" \
+   -e COOKIE_FILE="/path/to/cookies.txt" \
    --name lyd lyd
 ```
 
@@ -27,7 +27,7 @@ docker run \
 dnf/apt install ffmpeg
 sudo curl https://youtube-dl.org/downloads/latest/youtube-dl -o /usr/bin/youtube-dl
 chmod +x /usr/bin/youtube-dl
-pip3 install eyed3 youtube-search-python
+pip3 install eyed3 ytmusicapi
 ```
 
 ### Install
@@ -41,6 +41,7 @@ export LIDARR_URL="http://127.0.0.1:8686"
 export LIDARR_API_KEY="771de60596e946f6b3e5e6f5fb6fd729" # your key
 export LIDARR_DB="/path/to/lidarr/lidarr.db"
 export LIDARR_MUSIC_PATH="/music"
+export COOKIE_FILE="/cookies.txt"
 ```
 
 ### Usage
@@ -69,7 +70,7 @@ Album: 34/545   Track: 71/226
         Best title: The Beatles - Norwegian Wood (This Bird Has Flown)
         Best match: 1.0
         
-        Selected https://www.youtube.com/watch?v=W15_1kE08Gc
+        Selected https://music.youtube.com/watch?v=W15_1kE08Gc
 
     Youtube-dl
     ========================================
@@ -77,7 +78,7 @@ Album: 34/545   Track: 71/226
         youtube-dl
             --no-progress
             -x
-            --audio-format mp3 "https://www.youtube.com/watch?v=W15_1kE08Gc"
+            --audio-format mp3 "https://music.youtube.com/watch?v=W15_1kE08Gc"
             -o 
             "/music/The Beatles/The Beatles/The Beatles - The Beatles - Norwegian Wood (This Bird Has Flown).mp3"
 

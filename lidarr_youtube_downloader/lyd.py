@@ -15,7 +15,7 @@ from typing import Optional
 import eyed3
 import requests
 import typer
-from youtubesearchpython import VideosSearch
+from ytmusicapi import YTMusic
 
 endpoint = None
 api_key = None
@@ -24,7 +24,7 @@ music_path = None
 stop = False
 headers = None
 seen = []
-
+ytm = None
 
 def get_view_path():
     if os.path.exists("./view"):
@@ -240,6 +240,10 @@ def append_to_skip_file(link):
 def get_song(
     artistName, albumName, title, trackNumber, trackTotal, year, disc, discTotal, genre
 ):
+    global ytm
+
+    baseTitle = title
+    baseAlbumName = albumName
 
     artistName = artistName.replace("/", "+")
     title = title.replace("/", "")
@@ -273,19 +277,32 @@ def get_song(
     result = ""
 
     try:
-        videosSearch = VideosSearch(searchFor)
-
-        if videosSearch is None:
-            result = "Failed searching youtube"
+        musicSearch = ytm.search(searchFor, "songs")                    
+                    
+        if musicSearch is None:
+            result = "Failed searching youtube music"
             return
 
-        for song in videosSearch.result()["result"]:
-            if SequenceMatcher(None, searchFor, song["title"]).ratio() > best:
-                if skip_youtube_download(song["link"]) is False:
-                    best = SequenceMatcher(None, searchFor, song["title"]).ratio()
-                    bestLink = song["link"]
-                    bestTitle = song["title"]
-    except:
+        for result in musicSearch:
+            if ("videoId" not in result):
+                continue
+
+            songLink = "https://music.youtube.com/watch?v=" + result["videoId"]
+            
+            if result["title"] == baseTitle and ("album" in result and result["album"]["name"] == baseAlbumName):
+                if skip_youtube_download(songLink) is False:
+                    best = 1
+                    bestLink = songLink
+                    bestTitle = result["title"]
+            
+            if SequenceMatcher(None, baseTitle, result["title"]).ratio() > best:
+                if skip_youtube_download(songLink) is False:
+                    best = SequenceMatcher(None, baseTitle, result["title"]).ratio()
+                    bestLink = songLink
+                    bestTitle = result["title"]                      
+
+    except Exception as err:
+        print("ERROR: While search muisc!\n" + err)
         return
 
     result = "Best match: " + str(best)
@@ -305,6 +322,7 @@ def get_song(
     cookiePath = os.environ.get("COOKIE_FILE", "")
     
     downloader = "youtube-dl --no-progress -x"
+
     if cookiePath != "":
         downloader += ' --cookies ' + cookiePath + " "
         
@@ -490,12 +508,13 @@ def run(
     ),
     path: Optional[str] = os.environ.get("LIDARR_MUSIC_PATH", "/music"),
 ):
-    global endpoint, api_key, lidar_db, music_path, headers
+    global endpoint, api_key, lidar_db, music_path, headers, ytm
     endpoint = url
     api_key = key
     lidar_db = db
     music_path = path
     headers = {"X-Api-Key": api_key}
+    ytm = YTMusic()   
     
     iterative = True if stop is not None else False
     iterate_missing(artist, iterative)
